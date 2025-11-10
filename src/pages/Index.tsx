@@ -7,7 +7,7 @@ import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
@@ -28,7 +28,6 @@ interface User {
 
 const Index = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [showAuthDialog, setShowAuthDialog] = useState(true);
   const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
@@ -238,74 +237,73 @@ const Index = () => {
   if (!isLoggedIn) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
-        <Dialog open={showAuthDialog} onOpenChange={setShowAuthDialog}>
-          <DialogContent className="bg-card border-purple-500/30">
-            <DialogHeader>
-              <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                {authMode === 'login' ? '🚀 Вход в GIGA BOT' : '✨ Регистрация'}
-              </DialogTitle>
-              <DialogDescription>
-                {authMode === 'login' ? 'Войдите в свой аккаунт' : 'Создайте новый аккаунт'}
-              </DialogDescription>
-            </DialogHeader>
-            
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="your@email.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="bg-muted/50 border-purple-500/30"
-                />
-              </div>
-              
-              {authMode === 'register' && (
-                <div>
-                  <Label htmlFor="username">Имя пользователя</Label>
-                  <Input
-                    id="username"
-                    placeholder="ProGamer123"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    className="bg-muted/50 border-purple-500/30"
-                  />
-                </div>
-              )}
-              
-              <div>
-                <Label htmlFor="password">Пароль</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="bg-muted/50 border-purple-500/30"
-                />
-              </div>
+        <Card className="w-full max-w-md bg-card/90 border-purple-500/30 p-8">
+          <div className="text-center mb-6">
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-2">
+              {authMode === 'login' ? '🚀 Вход в GIGA BOT' : '✨ Регистрация'}
+            </h1>
+            <p className="text-muted-foreground">
+              {authMode === 'login' ? 'Войдите в свой аккаунт' : 'Создайте новый аккаунт'}
+            </p>
+          </div>
+          
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="your@email.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="bg-muted/50 border-purple-500/30 mt-1"
+              />
             </div>
+            
+            {authMode === 'register' && (
+              <div>
+                <Label htmlFor="username">Имя пользователя</Label>
+                <Input
+                  id="username"
+                  placeholder="ProGamer123"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="bg-muted/50 border-purple-500/30 mt-1"
+                />
+              </div>
+            )}
+            
+            <div>
+              <Label htmlFor="password">Пароль</Label>
+              <Input
+                id="password"
+                type="password"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleAuth()}
+                className="bg-muted/50 border-purple-500/30 mt-1"
+              />
+            </div>
+          </div>
 
-            <DialogFooter className="flex-col gap-2">
-              <Button 
-                onClick={handleAuth}
-                className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
-              >
-                {authMode === 'login' ? 'Войти' : 'Зарегистрироваться'}
-              </Button>
-              
-              <Button
-                variant="ghost"
-                onClick={() => setAuthMode(authMode === 'login' ? 'register' : 'login')}
-                className="w-full"
-              >
-                {authMode === 'login' ? 'Нет аккаунта? Регистрация' : 'Уже есть аккаунт? Войти'}
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+          <div className="flex flex-col gap-2 mt-6">
+            <Button 
+              onClick={handleAuth}
+              className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+            >
+              {authMode === 'login' ? 'Войти' : 'Зарегистрироваться'}
+            </Button>
+            
+            <Button
+              variant="ghost"
+              onClick={() => setAuthMode(authMode === 'login' ? 'register' : 'login')}
+              className="w-full"
+            >
+              {authMode === 'login' ? 'Нет аккаунта? Регистрация' : 'Уже есть аккаунт? Войти'}
+            </Button>
+          </div>
+        </Card>
       </div>
     );
   }
